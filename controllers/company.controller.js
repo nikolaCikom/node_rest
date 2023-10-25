@@ -1,9 +1,13 @@
 import Company from '../models/company.model.js';
 import User from '../models/user.model.js';
+import multer from 'multer';
+import upload from '../config/multerConfig.js';
 
 const getAllCompanies = async (req, res) => {
   try {
     const companies = await Company.findAll();
+
+    console.log(companies);
 
     return res.status(200).json({ data: companies });
   } catch (error) {
@@ -29,17 +33,29 @@ const getCompanyById = async (req, res) => {
 };
 
 const createCompany = async (req, res) => {
-  const { name, description } = req.body;
+  upload.single('image')(req, res, async function (err) {
+    if (err instanceof multer.MulterError) {
+      return res.status(400).json({ error: 'Greška prilikom uploada slike' });
+    } else if (err) {
+      return res.status(500).json({ error: 'Nepoznata greška' });
+    }
 
-  try {
-    const newCompany = await Company.create({
-      name,
-      description,
-    });
-    res.status(200).json(newCompany);
-  } catch (error) {
-    return res.status(500).json({ error: 'Greska prilikom dodavanja kompanije.' });
-  }
+    const { name, description } = req.body;
+
+    const image = await req.file.filename;
+
+    try {
+      const newCompany = await Company.create({
+        name,
+        description,
+        image,
+      });
+
+      res.status(200).json(newCompany);
+    } catch (error) {
+      return res.status(500).json({ error: 'Greška prilikom dodavanja kompanije.' });
+    }
+  });
 };
 
 const deleteCompany = async (req, res) => {

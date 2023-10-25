@@ -11,7 +11,7 @@
     <header><%- include('./nav/navbar') %></header>
     <div class="container mt-5 mb-5">
       <h1 class="mb-4">Kreirajte novu kompaniju</h1>
-      <form id="companyForm">
+      <form id="companyForm" enctype="multipart/form-data">
         <div class="form-group">
           <label for="name">Naziv kompanije</label>
           <input type="text" class="form-control" id="name" placeholder="Unesite naziv kompanije" required />
@@ -20,6 +20,11 @@
           <label for="description">Opis kompanije</label>
           <textarea class="form-control" id="description" rows="4" placeholder="Unesite opis kompanije" required></textarea>
         </div>
+        <div class="form-group mt-3">
+          <label for="image">Slika kompanije:</label>
+          <input type="file" class="form-control-file" id="image" name="image" accept="image/*" required />
+        </div>
+
         <button type="submit" class="btn btn-primary mt-3">Kreiraj kompaniju</button>
       </form>
     </div>

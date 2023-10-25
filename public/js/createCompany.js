@@ -6,17 +6,19 @@ form.addEventListener('submit', function (event) {
   const name = document.getElementById('name').value;
   const description = document.getElementById('description').value;
 
-  const data = {
-    name: name,
-    description: description,
-  };
+  const formData = new FormData();
+
+  formData.append('name', name);
+  formData.append('description', description);
+
+  const imageInput = document.getElementById('image');
+  const imageFile = imageInput.files[0];
+
+  formData.append('image', imageFile);
 
   fetch('/companies', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(data),
+    body: formData,
   })
     .then((response) => {
       if (response.ok) {
