@@ -17,7 +17,7 @@
             <!-- <img src="<%= company.image %> /> -->
             <img src="/images/<%= company.image %>" class="w-100" />
             <p class="card-text"><%= company.description %></p>
-            <a class="btn btn-primary" href="">Edit Company</a>
+            <a class="btn btn-primary" href="/updatecompany/<%= company.id %>">Edit Company</a>
             <button id="deleteCompanyButton" data-companyId="<%= company.id %>" class="btn btn-danger">Delete Company</button>
           </div>
         </div>

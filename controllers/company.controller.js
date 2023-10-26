@@ -58,6 +58,53 @@ const createCompany = async (req, res) => {
   });
 };
 
+const getCompanyByUpdate = async (req, res) => {
+  const companyId = req.params.id;
+
+  try {
+    const company = await Company.findByPk(companyId);
+
+    if (!company) {
+      return res.status(404).json({ error: 'Company not found' });
+    }
+    res.render('updateCompany', { company: company });
+  } catch (error) {}
+};
+
+const updateCompany = async (req, res) => {
+  upload.single('image')(req, res, async function (err) {
+    if (err instanceof multer.MulterError) {
+      return res.status(400).json({ error: 'Greška prilikom uploada slike' });
+    } else if (err) {
+      return res.status(500).json({ error: 'Nepoznata greška' });
+    }
+
+    const { name, description } = req.body;
+    const companyId = req.params.id;
+
+    try {
+      const existingCompany = await Company.findByPk(companyId);
+
+      if (!existingCompany) {
+        return res.status(404).json({ error: 'Kompanija nije pronađena' });
+      }
+
+      existingCompany.name = name;
+      existingCompany.description = description;
+
+      if (req.file) {
+        existingCompany.image = req.file.filename;
+      }
+
+      await existingCompany.save();
+
+      res.status(200).json(existingCompany);
+    } catch (error) {
+      return res.status(500).json({ error: 'Greška prilikom ažuriranja kompanije.' });
+    }
+  });
+};
+
 const deleteCompany = async (req, res) => {
   const companyId = req.params.id;
 
@@ -83,4 +130,4 @@ const deleteCompany = async (req, res) => {
   }
 };
 
-export default { getAllCompanies, getCompanyById, createCompany, deleteCompany };
+export default { getAllCompanies, getCompanyById, createCompany, deleteCompany, updateCompany, getCompanyByUpdate };
